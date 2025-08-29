@@ -6,30 +6,48 @@ const HeroCarousel = () => {
   
   const images = [
     {
-      url: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
-      alt: "Delicious pizza with fresh ingredients"
-    },
-    {
-      url: "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
+      url: "/images/hero-2.jpg",
       alt: "Colorful healthy food bowl"
     },
     {
-      url: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
+      url: "/images/hero-3.jpg",
       alt: "Delicious burgers and fries"
     },
     {
-      url: "https://images.unsplash.com/photo-1493770348161-369560ae357d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
+      url: "/images/hero-4.jpg",
       alt: "Gourmet breakfast spread"
     }
   ];
 
+  const [loaded, setLoaded] = useState<boolean[]>(new Array(images.length).fill(false));
+
   useEffect(() => {
+    // Preload images for reliable display
+    images.forEach((img, i) => {
+      const pre = new Image();
+      pre.src = img.url;
+      pre.onload = () => setLoaded(prev => {
+        const arr = [...prev];
+        arr[i] = true;
+        return arr;
+      });
+      pre.onerror = () => setLoaded(prev => {
+        const arr = [...prev];
+        arr[i] = true; // mark as loaded to avoid blocking rotation
+        return arr;
+      });
+    });
+  }, []);
+
+  const canStart = loaded.filter(Boolean).length >= Math.min(2, images.length);
+
+  useEffect(() => {
+    if (!canStart) return;
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % images.length);
-    }, 3000); // Changed to 3 seconds for smoother experience
-
+    }, 4000);
     return () => clearInterval(interval);
-  }, [images.length]);
+  }, [canStart, images.length]);
 
   return (
     <div className="relative w-full h-64 md:h-80 lg:h-96 rounded-lg overflow-hidden shadow-lg mb-8">
@@ -40,7 +58,7 @@ const HeroCarousel = () => {
             className={`absolute inset-0 transition-all duration-1000 ease-in-out ${
               index === currentSlide 
                 ? 'opacity-100 scale-100' 
-                : 'opacity-0 scale-105'
+                : 'opacity-0 scale-105 pointer-events-none'
             }`}
           >
             <img
@@ -48,8 +66,9 @@ const HeroCarousel = () => {
               alt={image.alt}
               className="w-full h-full object-cover"
               loading={index === 0 ? "eager" : "lazy"}
+              onError={(e) => { e.currentTarget.src = '/placeholder.svg'; }}
             />
-            <div className="absolute inset-0 hero-gradient opacity-40"></div>
+            <div className="absolute inset-0 hero-gradient opacity-25"></div>
             <div className={`absolute bottom-4 left-4 text-white transition-all duration-500 ${
               index === currentSlide ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
             }`}>
