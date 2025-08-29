@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { ChefHat, Users, Heart, Star } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import Layout from '@/components/Layout';
+import HeroCarousel from '@/components/HeroCarousel';
 
 const Index = () => {
   const { t } = useLanguage();
@@ -39,6 +40,7 @@ const Index = () => {
       <section className="relative overflow-hidden py-20 lg:py-32">
         <div className="absolute inset-0 hero-gradient opacity-5"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <HeroCarousel />
           <div className="animate-float">
             <h1 className="food-heading mb-6">
               {t('heroTitle')}
