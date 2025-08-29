@@ -14,23 +14,23 @@ const Index = () => {
   const features = [
     {
       icon: ChefHat,
-      title: "Share Recipes",
-      description: "Upload your favorite recipes with photos, videos, and audio instructions"
+      title: t('shareRecipes'),
+      description: t('shareRecipesDesc')
     },
     {
       icon: Users,
-      title: "Join Community",
-      description: "Connect with food lovers from around the world"
+      title: t('joinCommunity'),
+      description: t('joinCommunityDesc')
     },
     {
       icon: Heart,
-      title: "Inspire Others",
-      description: "Share your culinary journey and inspire fellow food enthusiasts"
+      title: t('inspireOthers'),
+      description: t('inspireOthersDesc')
     },
     {
       icon: Star,
-      title: "Discover New Flavors",
-      description: "Explore diverse cuisines and cooking techniques"
+      title: t('discoverFlavors'),
+      description: t('discoverFlavorsDesc')
     }
   ];
 
@@ -70,10 +70,10 @@ const Index = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Why Choose FoodShare?
+              {t('whyChoose')}
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Join thousands of food enthusiasts sharing their passion for cooking
+              {t('whyChooseSubtitle')}
             </p>
           </div>
           
@@ -99,14 +99,14 @@ const Index = () => {
           <Card className="border-0 shadow-2xl overflow-hidden">
             <div className="hero-gradient p-12 text-white">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                Ready to Share Your Recipe?
+                {t('readyToShare')}
               </h2>
               <p className="text-xl opacity-90 mb-8">
-                Join our community and start sharing your culinary creations today
+                {t('readyToShareDesc')}
               </p>
               <Link to="/auth">
                 <Button size="lg" variant="secondary" className="px-8 py-4 text-lg">
-                  Join Now
+                  {t('joinNow')}
                 </Button>
               </Link>
             </div>

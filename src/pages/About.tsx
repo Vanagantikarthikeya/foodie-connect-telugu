@@ -11,23 +11,23 @@ const About = () => {
   const values = [
     {
       icon: Heart,
-      title: "Passion for Food",
-      description: "We believe food brings people together and creates lasting memories"
+      title: t('passionForFood'),
+      description: t('passionDesc')
     },
     {
       icon: Users,
-      title: "Community First",
-      description: "Our platform is built by food lovers, for food lovers"
+      title: t('communityFirst'),
+      description: t('communityDesc')
     },
     {
       icon: Globe,
-      title: "Global Flavors",
-      description: "Celebrating diverse cuisines and cooking traditions worldwide"
+      title: t('globalFlavors'),
+      description: t('globalDesc')
     },
     {
       icon: Utensils,
-      title: "Share & Learn",
-      description: "Everyone has something unique to contribute to the culinary world"
+      title: t('shareLearn'),
+      description: t('shareLearnDesc')
     }
   ];
 
@@ -55,11 +55,10 @@ const About = () => {
           <section className="mb-20">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-                Our Mission
+                {t('ourMission')}
               </h2>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                To create a vibrant community where food enthusiasts from all walks of life can share their culinary wisdom, 
-                learn from each other, and celebrate the universal language of food.
+                {t('missionDescription')}
               </p>
             </div>
           </section>
@@ -68,7 +67,7 @@ const About = () => {
           <section className="mb-20">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-                What We Stand For
+                {t('whatWeStandFor')}
               </h2>
             </div>
             
@@ -92,20 +91,20 @@ const About = () => {
             <Card className="border-0 shadow-xl overflow-hidden">
               <div className="hero-gradient p-12 text-white text-center">
                 <h2 className="text-3xl md:text-4xl font-bold mb-8">
-                  Join Our Growing Community
+                  {t('joinGrowingCommunity')}
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                   <div>
                     <div className="text-4xl font-bold mb-2">10K+</div>
-                    <div className="text-lg opacity-90">Active Members</div>
+                    <div className="text-lg opacity-90">{t('activeMembers')}</div>
                   </div>
                   <div>
                     <div className="text-4xl font-bold mb-2">25K+</div>
-                    <div className="text-lg opacity-90">Recipes Shared</div>
+                    <div className="text-lg opacity-90">{t('recipesShared')}</div>
                   </div>
                   <div>
                     <div className="text-4xl font-bold mb-2">50+</div>
-                    <div className="text-lg opacity-90">Countries</div>
+                    <div className="text-lg opacity-90">{t('countries')}</div>
                   </div>
                 </div>
               </div>

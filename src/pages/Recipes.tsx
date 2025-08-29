@@ -102,7 +102,7 @@ const Recipes = () => {
               {t('recipesTitle')}
             </h1>
             <p className="food-subheading">
-              Discover amazing recipes from food lovers around the world
+              {t('recipesSubtitle')}
             </p>
           </div>
 
@@ -142,7 +142,7 @@ const Recipes = () => {
                     </div>
                     
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium">By {recipe.author}</span>
+                      <span className="text-sm font-medium">{t('by')} {recipe.author}</span>
                       <div className="flex items-center space-x-1">
                         {TypeIcon && (
                           <div className="w-8 h-8 rounded-full hero-gradient flex items-center justify-center">
@@ -160,7 +160,7 @@ const Recipes = () => {
           {/* Load More Button */}
           <div className="text-center mt-16">
             <button className="btn-food px-8 py-3 rounded-lg font-medium transition-all duration-300">
-              Load More Recipes
+              {t('loadMoreRecipes')}
             </button>
           </div>
         </div>

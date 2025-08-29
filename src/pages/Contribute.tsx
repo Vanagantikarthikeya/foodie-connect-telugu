@@ -24,28 +24,28 @@ const Contribute = () => {
       id: 'video',
       title: t('uploadVideo'),
       icon: Video,
-      description: 'Share cooking videos and tutorials',
+      description: t('videoDesc'),
       accept: 'video/*'
     },
     {
       id: 'audio',
       title: t('uploadAudio'),
       icon: Music,
-      description: 'Record cooking instructions or stories',
+      description: t('audioDesc'),
       accept: 'audio/*'
     },
     {
       id: 'text',
       title: t('uploadText'),
       icon: FileText,
-      description: 'Write detailed recipe instructions',
+      description: t('textDesc'),
       accept: '.txt,.doc,.docx'
     },
     {
       id: 'photo',
       title: t('uploadPhoto'),
       icon: Image,
-      description: 'Share beautiful food photography',
+      description: t('photoDesc'),
       accept: 'image/*'
     }
   ];
@@ -73,7 +73,7 @@ const Contribute = () => {
               {t('contributeTitle')}
             </h1>
             <p className="food-subheading">
-              Share your culinary masterpiece with the world
+              {t('contributeSubtitle')}
             </p>
           </div>
 
