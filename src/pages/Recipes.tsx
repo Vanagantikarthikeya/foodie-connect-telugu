@@ -1,13 +1,23 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { MapPin, Play, Volume2, FileText } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { MapPin, Play, Volume2, FileText, Heart } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import Layout from '@/components/Layout';
 
+// Import recipe images
+import biryaniImg from '@/assets/biryani.jpg';
+import dosaImg from '@/assets/masala-dosa.jpg';
+import pesarattuImg from '@/assets/pesarattu.jpg';
+import butterChickenImg from '@/assets/butter-chicken.jpg';
+import fishCurryImg from '@/assets/fish-curry.jpg';
+import rajmaImg from '@/assets/rajma-chawal.jpg';
+
 const Recipes = () => {
   const { t } = useLanguage();
+  const [likedRecipes, setLikedRecipes] = useState<Set<number>>(new Set());
 
   // Sample recipe data
   const recipes = [
@@ -17,7 +27,7 @@ const Recipes = () => {
       type: "photo",
       location: "Hyderabad",
       author: "Chef Priya",
-      image: "/api/placeholder/400/300",
+      image: biryaniImg,
       description: "Authentic Hyderabadi biryani with aromatic basmati rice and tender mutton",
       likes: 245
     },
@@ -27,7 +37,7 @@ const Recipes = () => {
       type: "video",
       location: "Bengaluru",
       author: "Rajesh Kumar",
-      image: "/api/placeholder/400/300",
+      image: dosaImg,
       description: "Traditional South Indian dosa with spiced potato filling",
       likes: 189
     },
@@ -37,7 +47,7 @@ const Recipes = () => {
       type: "audio",
       location: "Vijayawada",
       author: "Lakshmi Devi",
-      image: "/api/placeholder/400/300",
+      image: pesarattuImg,
       description: "Healthy green gram pancake with ginger and chili",
       likes: 156
     },
@@ -47,7 +57,7 @@ const Recipes = () => {
       type: "text",
       location: "Delhi",
       author: "Arjun Singh",
-      image: "/api/placeholder/400/300",
+      image: butterChickenImg,
       description: "Creamy tomato-based chicken curry with rich spices",
       likes: 298
     },
@@ -57,7 +67,7 @@ const Recipes = () => {
       type: "video",
       location: "Kochi",
       author: "Maria Jose",
-      image: "/api/placeholder/400/300",
+      image: fishCurryImg,
       description: "Kerala-style fish curry with coconut milk",
       likes: 167
     },
@@ -67,7 +77,7 @@ const Recipes = () => {
       type: "photo",
       location: "Punjab",
       author: "Gurpreet Kaur",
-      image: "/api/placeholder/400/300",
+      image: rajmaImg,
       description: "Comfort food - kidney beans curry with rice",
       likes: 203
     }
@@ -92,6 +102,31 @@ const Recipes = () => {
     return colors[type as keyof typeof colors] || 'bg-gray-100 text-gray-800';
   };
 
+  const toggleLike = (recipeId: number) => {
+    setLikedRecipes(prev => {
+      const newLiked = new Set(prev);
+      if (newLiked.has(recipeId)) {
+        newLiked.delete(recipeId);
+      } else {
+        newLiked.add(recipeId);
+      }
+      return newLiked;
+    });
+  };
+
+  const handlePlayContent = (recipe: any) => {
+    if (recipe.type === 'video') {
+      // Simulate video play
+      alert(`Playing video: ${recipe.title}`);
+    } else if (recipe.type === 'audio') {
+      // Simulate audio play
+      alert(`Playing audio instructions for: ${recipe.title}`);
+    } else if (recipe.type === 'text') {
+      // Simulate text view
+      alert(`Viewing recipe text for: ${recipe.title}`);
+    }
+  };
+
   return (
     <Layout>
       <div className="py-20">
@@ -112,12 +147,12 @@ const Recipes = () => {
               const TypeIcon = getTypeIcon(recipe.type);
               
               return (
-                <Card key={recipe.id} className="food-card border-0 shadow-lg overflow-hidden">
-                  <div className="relative">
+                <Card key={recipe.id} className="food-card border-0 shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300">
+                  <div className="relative group">
                     <img
                       src={recipe.image}
                       alt={recipe.title}
-                      className="w-full h-48 object-cover"
+                      className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                     <div className="absolute top-4 left-4">
                       <Badge className={`${getTypeBadge(recipe.type)} flex items-center gap-1`}>
@@ -125,9 +160,29 @@ const Recipes = () => {
                         {recipe.type}
                       </Badge>
                     </div>
-                    <div className="absolute top-4 right-4 bg-white/90 rounded-full px-2 py-1 text-sm font-medium">
-                      ❤️ {recipe.likes}
+                    <div className="absolute top-4 right-4 flex items-center gap-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="bg-white/90 hover:bg-white text-red-500 hover:text-red-600 px-2 py-1 h-auto"
+                        onClick={() => toggleLike(recipe.id)}
+                      >
+                        <Heart className={`h-4 w-4 mr-1 ${likedRecipes.has(recipe.id) ? 'fill-current' : ''}`} />
+                        {likedRecipes.has(recipe.id) ? recipe.likes + 1 : recipe.likes}
+                      </Button>
                     </div>
+                    
+                    {/* Play button overlay for video/audio */}
+                    {(recipe.type === 'video' || recipe.type === 'audio' || recipe.type === 'text') && (
+                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/20">
+                        <Button
+                          onClick={() => handlePlayContent(recipe)}
+                          className="bg-white/90 hover:bg-white text-primary rounded-full p-3"
+                        >
+                          {TypeIcon && <TypeIcon className="h-6 w-6" />}
+                        </Button>
+                      </div>
+                    )}
                   </div>
                   
                   <CardContent className="p-6">
@@ -143,13 +198,11 @@ const Recipes = () => {
                     
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-medium">{t('by')} {recipe.author}</span>
-                      <div className="flex items-center space-x-1">
-                        {TypeIcon && (
-                          <div className="w-8 h-8 rounded-full hero-gradient flex items-center justify-center">
-                            <TypeIcon className="h-4 w-4 text-white" />
-                          </div>
-                        )}
-                      </div>
+                      {recipe.type === 'photo' && (
+                        <div className="w-8 h-8 rounded-full hero-gradient flex items-center justify-center">
+                          <Heart className="h-4 w-4 text-white" />
+                        </div>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
