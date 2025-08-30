@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
 type Language = 'en' | 'te';
 
@@ -200,6 +200,10 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
   const t = (key: string): string => {
     return translations[language][key as keyof typeof translations['en']] || key;
   };
+
+  useEffect(() => {
+    document.title = translations[language].siteTitle;
+  }, [language]);
 
   return (
     <LanguageContext.Provider value={{ language, toggleLanguage, t }}>

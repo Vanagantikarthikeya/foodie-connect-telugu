@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
+import React, { useEffect, useMemo, useState } from 'react';
+
 
 const HeroCarousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -19,40 +19,50 @@ const HeroCarousel = () => {
     }
   ];
 
-  const [loaded, setLoaded] = useState<boolean[]>(new Array(images.length).fill(false));
+  const [success, setSuccess] = useState<boolean[]>(new Array(images.length).fill(false));
 
   useEffect(() => {
-    // Preload images for reliable display
+    // Preload only supported images
     images.forEach((img, i) => {
       const pre = new Image();
       pre.src = img.url;
-      pre.onload = () => setLoaded(prev => {
+      pre.onload = () => setSuccess(prev => {
         const arr = [...prev];
-        arr[i] = true;
+        arr[i] = true; // mark as successful
         return arr;
       });
-      pre.onerror = () => setLoaded(prev => {
-        const arr = [...prev];
-        arr[i] = true; // mark as loaded to avoid blocking rotation
-        return arr;
-      });
+      pre.onerror = () => {
+        // leave as false; do not include this image in the rotation
+      };
     });
   }, []);
 
-  const canStart = loaded.filter(Boolean).length >= Math.min(2, images.length);
+  const activeImages = useMemo(() => images.filter((_, i) => success[i]), [success]);
+  const canStart = activeImages.length >= Math.min(2, images.length);
+
+  // Ensure currentSlide stays within bounds when activeImages change
+  useEffect(() => {
+    if (activeImages.length === 0) {
+      setCurrentSlide(0);
+      return;
+    }
+    if (currentSlide >= activeImages.length) {
+      setCurrentSlide(0);
+    }
+  }, [activeImages.length]);
 
   useEffect(() => {
     if (!canStart) return;
     const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % images.length);
+      setCurrentSlide((prev) => (prev + 1) % activeImages.length);
     }, 4000);
     return () => clearInterval(interval);
-  }, [canStart, images.length]);
+  }, [canStart, activeImages.length]);
 
   return (
     <div className="relative w-full h-64 md:h-80 lg:h-96 rounded-lg overflow-hidden shadow-lg mb-8">
       <div className="relative w-full h-full">
-        {images.map((image, index) => (
+        {activeImages.map((image, index) => (
           <div
             key={index}
             className={`absolute inset-0 transition-all duration-1000 ease-in-out ${
@@ -66,7 +76,6 @@ const HeroCarousel = () => {
               alt={image.alt}
               className="w-full h-full object-cover"
               loading={index === 0 ? "eager" : "lazy"}
-              onError={(e) => { e.currentTarget.src = '/placeholder.svg'; }}
             />
             <div className="absolute inset-0 hero-gradient opacity-25"></div>
             <div className={`absolute bottom-4 left-4 text-white transition-all duration-500 ${
@@ -80,7 +89,7 @@ const HeroCarousel = () => {
       
       {/* Dots indicator */}
       <div className="absolute bottom-4 right-4 flex space-x-2">
-        {images.map((_, index) => (
+        {activeImages.map((_, index) => (
           <button
             key={index}
             className={`w-3 h-3 rounded-full transition-all duration-300 ${
